@@ -1,4 +1,4 @@
-## The treasures of Ruby core, one for each day
+## The Treasures of Ruby, one for each day
 
 Christophe Philemotte, Paris.rb, 6 May 2013
 
@@ -101,6 +101,12 @@ i18n:
 ---
 
 ### String: How to clean up invalid byte sequences?
+
+---
+
+```
+ArgumentError: invalid byte sequence in UTF-8
+```
 
 ---
 
@@ -218,16 +224,18 @@ histogram = {
 
 
 
+
 histogram = histogram.select { |k, _| k != :saturday && k != :sunday }
 ```
 
 ---
 
 ```
+def filter(hsh, *keys)
+  hsh.select { |k, _| !keys.include? k }
+end
 
-require 'active_support/core_ext/hash' # not necessary if Rails
-
-histogram.except(:saturday, :sunday)
+filter(histogram, :saturday, :sunday)
 ```
 
 ---
@@ -238,6 +246,16 @@ def filter(hsh, *keys)
 end
 
 filter(histogram, :saturday, :sunday)
+```
+
+---
+
+```
+
+
+require 'active_support/core_ext/hash' # not necessary if Rails
+
+histogram.except(:saturday, :sunday)
 ```
 
 ---
@@ -275,21 +293,50 @@ new_entries = updated_entries.reject { |k, _| entries.include? k }
 
 ---
 
-### Hunt Treasures
-
-1. Read the doc: the full page
-2. Read the source
-3. SO, Google
-4. Blogs, Podcasts, ...
-5. Discuss
+![Treasure Map](images/treasure-map.jpg)
 
 ---
 
-### Where to start?
+#### 1. Read the doc: yes, the full page
+
+---
 
 * Ruby Doc [http://ruby-doc.org/](http://ruby-doc.org/)
 * Rails Doc [http://api.rubyonrails.org/](http://api.rubyonrails.org/)
 * Apidock [http://apidock.com/](http://apidock.com/)
 * OmniRef [https://www.omniref.com/](https://www.omniref.com/)
-* Ruby Source [https://github.com/ruby/ruby](https://github.com/ruby/ruby)
-* Rails Source [https://github.com/rails/rails](https://github.com/rails/rails)
+
+---
+
+#### 2. Read the source, Luke
+
+![Read the source, Luke](images/read-the-source.jpg)
+
+---
+
+* Gem source
+* Rails source [https://github.com/rails/rails](https://github.com/rails/rails)
+
+----
+
+#### 3. SO, Google
+
+![SO](images/so.jpg)
+
+---
+
+#### 4. Blogs, Podcasts, Conferences, Meetup...
+
+![Paris.rb](images/paris-rb.png)
+
+---
+
+#### 5. Discuss
+
+![wally](images/wally.gif)
+
+---
+
+* Your coworker/colleague
+* A friend
+* ME :)
