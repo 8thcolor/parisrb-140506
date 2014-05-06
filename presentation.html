@@ -1,0 +1,218 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+<link href="assets/38785450e9bdc107b7f43b3202b6bfdf.css" rel="stylesheet">
+<link href="assets/cbd95a3b7ed26f2a42b4c7dc0b0c598d.css" rel="stylesheet">
+<title>The treasures of Ruby core, one for each day</title>
+<link rel="stylesheet" href="http://yandex.st/highlightjs/8.0/styles/default.min.css">
+<script src="http://yandex.st/highlightjs/8.0/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+<section><h2>The treasures of Ruby core, one for each day</h2>
+<p>Christophe Philemotte, Paris.rb, 6 May 2013</p>
+</section><section name="1">
+<h3>About me</h3>
+<ul>
+<li><p>Developer (<a href="https://github.com/toch">@toch on GitHub</a>, <a href="https://twitter.com/_toch">@_toch on Twitter</a>)</p></li>
+<li><p>Author on <a href="http://blog.8thcolor.com">blog.8thcolor.com</a></p></li>
+<li><p>CoFounder of PullReview <a href="https://pullreview.com">https://pullreview.com</a></p></li>
+</ul>
+</section><section name="2">
+<p><img src="assets/1a9e91d780e88d03f14ab575945696c7.png" alt="Mr Happy Man"></p>
+</section><section name="3">
+<blockquote><p>I hope to see Ruby help every programmer in the world to be productive, and to<br>
+enjoy programming, and to be happy. That is the primary purpose of Ruby<br>
+language.
+<strong>Matz, 2008</strong></p></blockquote>
+</section><section name="4">
+<pre><code>contacts = %w[Granny Bill]
+contacts &lt;&lt; 'Granny' unless contacts.include? 'Granny'
+</code></pre>
+</section><section name="5">
+<pre><code>tags_post1 = [ 'ruby', 'rails', 'test' ]
+tags_post2 = [ 'test', 'rspec' ]
+
+common_tags = []
+tags_post1.each { |tag| common_tags &lt;&lt; tag if tags_post2.include? tag }
+</code></pre>
+</section><section name="6">
+<p><img src="assets/85ede84b5617699989454548d51417ab.jpg" alt="Unhappy"></p>
+</section><section name="7">
+<p><img src="assets/fd1777878dac591594427b04b6de54ef.jpg" alt="Ruby Jewels"></p>
+</section><section name="8">
+<h3>String: How to remove accents and diacritics?</h3>
+</section><section name="9">
+<pre><code>keyword = 'Kurt G&ouml;del'
+
+
+
+
+
+
+</code></pre>
+</section><section name="10">
+<pre><code>keyword = 'Kurt G&ouml;del'
+
+keyword.tr(
+  "&Agrave;&Aacute;&Acirc;&Atilde;&Auml;&Aring;&agrave;&aacute;&acirc;&atilde;&auml;&aring;&#256;&#257;&#258;&#259;&#260;&#261;&Ccedil;&ccedil;&#262;&#263;&#264;&#265;&#266;&#267;&#268;&#269;&ETH;&eth;&#270;&#271;&#272;&#273;&Egrave;&Eacute;&Ecirc;&Euml;&egrave;&eacute;&ecirc;&euml;&#274;&#275;&#276;&#277;&#278;&#279;&#280;&#281;&#282;&#283;&#284;&#285;&#286;&#287;&#288;&#289;&#290;&#291;&#292;&#293;&#294;&#295;&Igrave;&Iacute;&Icirc;&Iuml;&igrave;&iacute;&icirc;&iuml;&#296;&#297;&#298;&#299;&#300;&#301;&#302;&#303;&#304;&#305;&#308;&#309;&#310;&#311;&#312;&#313;&#314;&#315;&#316;&#317;&#318;&#319;&#320;&#321;&#322;&Ntilde;&ntilde;&#323;&#324;&#325;&#326;&#327;&#328;&#329;&#330;&#331;&Ograve;&Oacute;&Ocirc;&Otilde;&Ouml;&Oslash;&ograve;&oacute;&ocirc;&otilde;&ouml;&oslash;&#332;&#333;&#334;&#335;&#336;&#337;&#340;&#341;&#342;&#343;&#344;&#345;&#346;&#347;&#348;&#349;&#350;&#351;&Scaron;&scaron;&#383;&#354;&#355;&#356;&#357;&#358;&#359;&Ugrave;&Uacute;&Ucirc;&Uuml;&ugrave;&uacute;&ucirc;&uuml;&#360;&#361;&#362;&#363;&#364;&#365;&#366;&#367;&#368;&#369;&#370;&#371;&#372;&#373;&Yacute;&yacute;&yuml;&#374;&#375;&Yuml;&#377;&#378;&#379;&#380;&#381;&#382;",
+  "AAAAAAaaaaaaAaAaAaCcCcCcCcCcDdDdDdEEEEeeeeEeEeEeEeEeGgGgGgGgHhHhIIIIiiiiIiIiIiIiIiJjKkkLlLlLlLlLlNnNnNnNnnNnOOOOOOooooooOoOoOoRrRrRrSsSsSsSssTtTtTtUUUUuuuuUuUuUuUuUuUuWwYyyYyYZzZzZz"
+)
+
+</code></pre>
+</section><section name="11">
+<pre><code>keyword = 'Kurt G&ouml;del'
+
+require 'active_support/inflector' # not necessary if Rails
+
+ActiveSupport::Inflector.transliterate('Kurt G&ouml;del')
+
+
+</code></pre>
+</section><section name="12">
+<p>specific rules into <code>locales/de.yml</code></p>
+<pre><code>i18n:
+  transliterate:
+    rule:
+      &uuml;: "ue"
+      &ouml;: "oe"
+</code></pre>
+</section><section name="13">
+<h3>String: How to clean up invalid byte sequences?</h3>
+</section><section name="14">
+<pre><code>line = "This is an invalid byte sequence \244"
+
+
+line.upcase
+
+</code></pre>
+</section><section name="15">
+<pre><code>ArgumentError: invalid byte sequence in UTF-8
+</code></pre>
+</section><section name="16">
+<pre><code>line = "This is an invalid byte sequence \244"
+line.encode!('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
+
+line.upcase
+
+</code></pre>
+</section><section name="17">
+<pre><code>line = "This is an invalid byte sequence \244"
+line.scrub!('') # gem 'string-scrub' if &lt; 2.1
+
+line.upcase
+
+</code></pre>
+
+</section><section name="18">
+<h3>Array: How to avoid duplicates in an Array?</h3>
+</section><section name="19">
+<pre><code>
+contacts = %w[Granny Bill]
+contacts &lt;&lt; 'Granny' unless contacts.include? 'Granny'
+
+</code></pre>
+</section><section name="20">
+<pre><code>
+contacts = %w[Granny Bill]
+contacts &lt;&lt; 'Granny'
+contacts.uniq!
+</code></pre>
+</section><section name="21">
+<pre><code>require 'set'
+contacts = Set.new(%w[Granny Bill])
+contacts &lt;&lt; 'Granny'
+
+</code></pre>
+</section><section name="22">
+<h3>Array: How to find what elements are common to 2 Arrays?</h3>
+</section><section name="23">
+<pre><code>tags_post1 = [ 'ruby', 'rails', 'test' ]
+tags_post2 = [ 'test', 'rspec' ]
+
+common_tags = []
+tags_post1.each { |tag| common_tags &lt;&lt; tag if tags_post2.include? tag }
+</code></pre>
+</section><section name="24">
+<pre><code>tags_post1 = [ 'ruby', 'rails', 'test' ]
+tags_post2 = [ 'test', 'rspec' ]
+
+common_tags = tags_post1 &amp; tags_post2
+
+</code></pre>
+</section><section name="25">
+<h3>Hash: How to filter out some keys of a Hash?</h3>
+</section><section name="26">
+<pre><code>histogram = {
+  monday: 5,
+  tuesday: 7,
+  wednesday: 10,
+  thursday: 18,
+  friday: 7,
+  saturday: 2,
+  sunday: 0
+}
+</code></pre>
+</section><section name="27">
+<pre><code>
+
+
+histogram = histogram.select { |k, _| k != :saturday &amp;&amp; k != :sunday }
+</code></pre>
+</section><section name="28">
+<pre><code>
+require 'active_support/core_ext/hash' # not necessary if Rails
+
+histogram.except(:saturday, :sunday)
+</code></pre>
+</section><section name="29">
+<pre><code>def filter(hsh, *keys)
+  hsh.reject { |k, _| keys.include? k }
+end
+
+filter(histogram, :saturday, :sunday)
+</code></pre>
+</section><section name="30">
+<h3>Hash: How to find the differences between two Hashes?</h3>
+</section><section name="31">
+<pre><code>entries = {
+  1372284000 =&gt; "CVE-2013-4073",
+  1368482400 =&gt; "CVE-2013-2065"
+}
+
+updated_entries = {
+  1385074800 =&gt; "CVE-2013-4164",
+  1372284000 =&gt; "CVE-2013-4073",
+  1368482400 =&gt; "CVE-2013-2065"
+}
+</code></pre>
+</section><section name="32">
+<pre><code>new_entries = updated_entries.reject { |k, _| entries.include? k }
+</code></pre>
+</section><section name="33">
+<p><img src="assets/71b39a90db1abe7446a802174ecc0207.jpg" alt="Cavern of Books"></p>
+</section><section name="34">
+<p><img src="assets/b115e2d480e21ad7e3ccb565fe3bf319.jpg" alt="Treasure"></p>
+</section><section name="35">
+<h3>Hunt Treasures</h3>
+<ol>
+<li><p>Read the doc: the full page</p></li>
+<li><p>Read the source</p></li>
+<li><p>SO, Google</p></li>
+<li><p>Blogs, Podcasts, &hellip;</p></li>
+<li><p>Discuss</p></li>
+</ol>
+</section><section name="36">
+<h3>Where to start?</h3>
+<ul>
+<li><p>Ruby Doc <a href="http://ruby-doc.org/">http://ruby-doc.org/</a></p></li>
+<li><p>Rails Doc <a href="http://api.rubyonrails.org/">http://api.rubyonrails.org/</a></p></li>
+<li><p>Apidock <a href="http://apidock.com/">http://apidock.com/</a></p></li>
+<li><p>OmniRef <a href="https://www.omniref.com/">https://www.omniref.com/</a></p></li>
+<li><p>Ruby Source <a href="https://github.com/ruby/ruby">https://github.com/ruby/ruby</a></p></li>
+<li><p>Rails Source <a href="https://github.com/rails/rails">https://github.com/rails/rails</a></p></li>
+</ul></section>
+</div></div>
+<script src="assets/8244e91e3efc1ad6285d9beb8125fe4b.js" type="text/javascript"></script><script src="assets/15cf8d7f8a9b02264e443d28141a5fdf.js" type="text/javascript"></script><script>Reveal.initialize({ dependencies: [], local:true,history:true });</script>
+</body>
+</html>
